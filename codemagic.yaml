@@ -1,0 +1,55 @@
+workflows:
+  ios-release:
+    name: Wydatki iOS
+    instance_type: mac_mini_m2
+    max_build_duration: 60
+
+    environment:
+      ios_signing:
+        distribution_type: development
+        bundle_identifier: com.example.wydatki
+      vars:
+        GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx4g"
+      xcode: 16.4
+
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: main
+          include: true
+          source: true
+
+    scripts:
+      - name: Make Gradle executable
+        script: |
+          chmod +x ./gradlew
+
+      - name: Check Java
+        script: |
+          java -version
+
+      - name: Generate ComposeApp framework and CocoaPods
+        script: |
+          ./gradlew :composeApp:podInstall
+
+      - name: Install CocoaPods
+        script: |
+          cd iosApp
+          pod install --repo-update
+
+      - name: Build iOS app
+        script: |
+          xcodebuild \
+            -workspace iosApp/iosApp.xcworkspace \
+            -scheme iosApp \
+            -configuration Release \
+            -sdk iphoneos \
+            -destination 'generic/platform=iOS' \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            build
+
+    artifacts:
+      - /Users/builder/clone/iosApp/build/ios/Release-iphoneos/*.app
+      - /Users/builder/clone/iosApp/build/ios/Release-iphoneos/*.ipa
