@@ -1,6 +1,5 @@
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.androidMultiplatformLibrary)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlinSerialization)
@@ -8,12 +7,6 @@ plugins {
 }
 
 kotlin {
-    android {
-        namespace = "com.example.wydatki.shared"
-        compileSdk = 37
-        minSdk = 24
-    }
-
     listOf(
         iosArm64(),
         iosSimulatorArm64()
@@ -25,17 +18,10 @@ kotlin {
     }
 
     cocoapods {
-        name = "ComposeApp"
         version = "1.0"
-        summary = "Wydatki shared Kotlin Multiplatform module"
+        summary = "Wydatki iOS shared module"
         homepage = "https://github.com/janczesko12/Wydatki-IOS"
         ios.deploymentTarget = "15.0"
-        podfile = project.file("../iosApp/Podfile")
-
-        framework {
-            baseName = "ComposeApp"
-            isStatic = true
-        }
 
         pod("FirebaseCore")
         pod("FirebaseAuth")
@@ -59,15 +45,6 @@ kotlin {
             implementation(libs.firebase.common)
             implementation(libs.firebase.auth)
             implementation(libs.firebase.firestore)
-        }
-        androidMain.dependencies {
-            implementation(libs.androidx.biometric)
-            implementation(libs.androidx.activity.compose)
-            implementation("com.google.firebase:firebase-auth-ktx:23.0.0")
-            implementation("com.google.firebase:firebase-firestore-ktx:25.0.0")
-            implementation("com.google.firebase:firebase-common-ktx:21.0.0")
-        }
-        iosMain.dependencies {
         }
     }
 }
