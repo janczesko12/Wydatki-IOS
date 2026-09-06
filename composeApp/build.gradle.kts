@@ -19,6 +19,7 @@ kotlin {
 
     cocoapods {
         version = "1.0"
+        name = "ComposeApp"
         summary = "Wydatki iOS shared module"
         homepage = "https://github.com/janczesko12/Wydatki-IOS"
         ios.deploymentTarget = "15.0"
@@ -26,6 +27,8 @@ kotlin {
         pod("FirebaseCore")
         pod("FirebaseAuth")
         pod("FirebaseFirestore")
+
+        podfile = project.file("../iosApp/Podfile")
     }
 
     sourceSets {
