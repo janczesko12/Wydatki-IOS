@@ -7,15 +7,8 @@ plugins {
 }
 
 kotlin {
-    listOf(
-        iosArm64(),
-        iosSimulatorArm64()
-    ).forEach { iosTarget ->
-        iosTarget.binaries.framework {
-            baseName = "ComposeApp"
-            isStatic = true
-        }
-    }
+    iosArm64()
+    iosSimulatorArm64()
 
     cocoapods {
         version = "1.0"
@@ -23,6 +16,11 @@ kotlin {
         summary = "Wydatki iOS shared module"
         homepage = "https://github.com/janczesko12/Wydatki-IOS"
         ios.deploymentTarget = "15.0"
+
+        framework {
+            baseName = "ComposeApp"
+            isStatic = true
+        }
 
         pod("FirebaseCore")
         pod("FirebaseAuth")
@@ -36,8 +34,10 @@ kotlin {
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)
+
             @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
             implementation(compose.components.resources)
+
             implementation(compose.components.uiToolingPreview)
             implementation(compose.materialIconsExtended)
 
