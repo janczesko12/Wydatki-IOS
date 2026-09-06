@@ -1,8 +1,8 @@
 package com.example.wydatki.data
 
-import com.example.wydatki.ui.getCurrentTimeMillis
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.auth.auth
+import dev.gitlive.firebase.firestore.Timestamp
 import dev.gitlive.firebase.firestore.firestore
 
 sealed interface CloudPullResult {
@@ -39,7 +39,7 @@ object FirebaseSync {
         doc.set(
             mapOf(
                 "data" to json,
-                "updatedAt" to getCurrentTimeMillis()
+                "updatedAt" to Timestamp.now()
             )
         )
     }
