@@ -46,6 +46,7 @@ jobs:
             -sdk iphonesimulator \
             -destination 'generic/platform=iOS Simulator' \
             CODE_SIGNING_ALLOWED=NO \
+            BUNDLE_LOADER= \
             build
 
       - name: Package app
