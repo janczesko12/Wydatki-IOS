@@ -1,16 +1,13 @@
 workflows:
-  ios-release:
+  ios-build:
     name: Wydatki iOS
-    instance_type: mac_mini_m2
     max_build_duration: 60
+    instance_type: mac_mini_m2
 
     environment:
-      ios_signing:
-        distribution_type: development
-        bundle_identifier: com.example.wydatki
+      xcode: 16.4
       vars:
         GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx4g"
-      xcode: 16.4
 
     triggering:
       events:
@@ -25,11 +22,13 @@ workflows:
         script: |
           chmod +x ./gradlew
 
-      - name: Check Java
+      - name: Show environment
         script: |
           java -version
+          xcodebuild -version
+          pod --version
 
-      - name: Generate ComposeApp framework and CocoaPods
+      - name: Generate ComposeApp CocoaPods framework
         script: |
           ./gradlew :composeApp:podInstall
 
@@ -38,18 +37,18 @@ workflows:
           cd iosApp
           pod install --repo-update
 
-      - name: Build iOS app
+      - name: Build iOS
         script: |
           xcodebuild \
             -workspace iosApp/iosApp.xcworkspace \
             -scheme iosApp \
-            -configuration Release \
-            -sdk iphoneos \
-            -destination 'generic/platform=iOS' \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
+            EXCLUDED_ARCHS=x86_64 \
             build
 
     artifacts:
-      - /Users/builder/clone/iosApp/build/ios/Release-iphoneos/*.app
-      - /Users/builder/clone/iosApp/build/ios/Release-iphoneos/*.ipa
+      - build/ios/Debug-iphonesimulator/*.app
