@@ -30,9 +30,10 @@ jobs:
             exit 1
           fi
 
-          echo "$GOOGLE_SERVICE_INFO_PLIST_BASE64" | base64 --decode > iosApp/GoogleService-Info.plist
-          test -s iosApp/GoogleService-Info.plist
-          echo "GoogleService-Info.plist prepared."
+          mkdir -p iosApp/iosApp
+          echo "$GOOGLE_SERVICE_INFO_PLIST_BASE64" | base64 --decode > iosApp/iosApp/GoogleService-Info.plist
+          test -s iosApp/iosApp/GoogleService-Info.plist
+          echo "GoogleService-Info.plist prepared at iosApp/iosApp/GoogleService-Info.plist."
 
       - name: Validate Xcode project
         run: |
@@ -49,7 +50,7 @@ jobs:
         run: |
           sudo xcode-select --switch /Applications/Xcode_16.4.app/Contents/Developer
           xcodebuild -version
-          sudo xcodebuild -downloadPlatform iOS
+          xcodebuild -downloadPlatform iOS
           echo "Available iOS simulator runtimes:"
           xcrun simctl list runtimes
 
