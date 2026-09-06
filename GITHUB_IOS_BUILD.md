@@ -11,3 +11,7 @@ For iOS Firebase, add a repository secret named `GOOGLE_SERVICE_INFO_PLIST_BASE6
 
 ## Physical iPhone
 This workflow currently builds an unsigned iOS Simulator app. A physical iPhone `.ipa` requires Apple code signing (certificate + provisioning profile / distribution method). That can be added once Apple signing secrets are configured.
+
+
+## Aktualna poprawka
+Dodano wymagany opt-in `ExperimentalForeignApi` dla iOS `IosFilePicker`, aby kompilacja Kotlin/Native przechodziła w GitHub Actions.

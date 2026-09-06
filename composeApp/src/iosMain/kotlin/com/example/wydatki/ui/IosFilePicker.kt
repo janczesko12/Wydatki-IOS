@@ -1,6 +1,5 @@
 package com.example.wydatki.ui
 
-import kotlinx.cinterop.ExperimentalForeignApi
 import platform.UIKit.*
 import platform.Foundation.*
 import platform.UniformTypeIdentifiers.*
@@ -8,9 +7,11 @@ import platform.darwin.NSObject
 import platform.darwin.dispatch_async
 import platform.darwin.dispatch_get_main_queue
 
-@OptIn(ExperimentalForeignApi::class)
+@OptIn(kotlinx.cinterop.ExperimentalForeignApi::class)
 class IosFilePicker : FilePicker {
 
+    // Trzymamy silną referencję do delegata, aby nie został usunięty przez GC,
+    // ponieważ UIDocumentPickerViewController trzyma go słabo (weak).
     private var currentDelegate: NSObject? = null
 
     override fun exportJson(content: String, fileName: String, onResult: (Boolean, String) -> Unit) {
@@ -18,7 +19,7 @@ class IosFilePicker : FilePicker {
             val finalFileName = if (fileName.lowercase().endsWith(".json")) fileName else "$fileName.json"
             val tempDir = NSTemporaryDirectory()
             val fileURL = NSURL.fileURLWithPath(tempDir).URLByAppendingPathComponent(finalFileName)
-
+            
             if (fileURL == null) {
                 onResult(false, "Błąd tworzenia ścieżki pliku.")
                 return@dispatch_async
@@ -39,7 +40,7 @@ class IosFilePicker : FilePicker {
                 forExportingURLs = listOf(fileURL),
                 asCopy = true
             )
-
+            
             val delegate = object : NSObject(), UIDocumentPickerDelegateProtocol {
                 override fun documentPicker(controller: UIDocumentPickerViewController, didPickDocumentsAtURLs: List<*>) {
                     currentDelegate = null
@@ -51,7 +52,7 @@ class IosFilePicker : FilePicker {
                     onResult(false, "Eksport anulowany.")
                 }
             }
-
+            
             currentDelegate = delegate
             picker.delegate = delegate
             present(picker)
@@ -60,11 +61,12 @@ class IosFilePicker : FilePicker {
 
     override fun importJson(onResult: (String?) -> Unit) {
         dispatch_async(dispatch_get_main_queue()) {
+            // UTTypeJSON wymaga iOS 14+
             val picker = UIDocumentPickerViewController(
                 forOpeningContentTypes = listOf(UTTypeJSON),
                 asCopy = true
             )
-
+            
             val delegate = object : NSObject(), UIDocumentPickerDelegateProtocol {
                 override fun documentPicker(controller: UIDocumentPickerViewController, didPickDocumentsAtURLs: List<*>) {
                     currentDelegate = null
@@ -90,7 +92,7 @@ class IosFilePicker : FilePicker {
                     onResult(null)
                 }
             }
-
+            
             currentDelegate = delegate
             picker.delegate = delegate
             present(picker)
@@ -111,6 +113,7 @@ class IosFilePicker : FilePicker {
             ?.windows
             ?.mapNotNull { it as? UIWindow }
             ?.firstOrNull { it.isKeyWindow() }
+            ?: UIApplication.sharedApplication.keyWindow
 
         var topController = window?.rootViewController
         while (topController?.presentedViewController != null) {
