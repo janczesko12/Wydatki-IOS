@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlinSerialization)
+    alias(libs.plugins.kotlinCocoapods)
 }
 
 kotlin {
@@ -12,7 +13,7 @@ kotlin {
         compileSdk = 37
         minSdk = 24
     }
-    
+
     listOf(
         iosArm64(),
         iosSimulatorArm64()
@@ -22,7 +23,18 @@ kotlin {
             isStatic = true
         }
     }
-    
+
+    cocoapods {
+        version = "1.0"
+        summary = "Wydatki shared Kotlin Multiplatform module"
+        homepage = "https://github.com/janczesko12/Wydatki-IOS"
+        ios.deploymentTarget = "15.0"
+
+        pod("FirebaseCore")
+        pod("FirebaseAuth")
+        pod("FirebaseFirestore")
+    }
+
     sourceSets {
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -32,11 +44,11 @@ kotlin {
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             implementation(compose.materialIconsExtended)
-            
+
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.kotlinx.datetime)
             implementation(libs.kotlinx.coroutines.core)
-            
+
             implementation(libs.firebase.common)
             implementation(libs.firebase.auth)
             implementation(libs.firebase.firestore)
