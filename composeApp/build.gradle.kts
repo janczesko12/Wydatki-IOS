@@ -29,6 +29,12 @@ kotlin {
         summary = "Wydatki shared Kotlin Multiplatform module"
         homepage = "https://github.com/janczesko12/Wydatki-IOS"
         ios.deploymentTarget = "15.0"
+        podfile = project.file("../iosApp/Podfile")
+
+        framework {
+            baseName = "ComposeApp"
+            isStatic = true
+        }
 
         pod("FirebaseCore")
         pod("FirebaseAuth")
