@@ -227,7 +227,6 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
