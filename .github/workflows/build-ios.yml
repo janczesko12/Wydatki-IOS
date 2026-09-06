@@ -47,8 +47,19 @@ jobs:
 
       - name: Prepare iOS Simulator runtime
         run: |
-          xcodebuild -downloadPlatform iOS
+          sudo xcode-select --switch /Applications/Xcode_16.4.app/Contents/Developer
+          xcodebuild -version
+          sudo xcodebuild -downloadPlatform iOS
+          echo "Available iOS simulator runtimes:"
           xcrun simctl list runtimes
+
+      - name: Verify iOS Simulator runtime
+        run: |
+          if ! xcrun simctl list runtimes | grep -q 'iOS 18'; then
+            echo "ERROR: No iOS Simulator runtime is installed."
+            exit 1
+          fi
+          echo "iOS Simulator runtime detected."
 
       - name: Build iOS Simulator app
         run: |
