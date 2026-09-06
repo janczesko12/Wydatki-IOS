@@ -1,0 +1,47 @@
+name: Build iOS
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-ios:
+    runs-on: macos-15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up JDK 25
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+      - name: Make Gradle executable
+        run: chmod +x ./gradlew
+      - name: Prepare Firebase config
+        if: ${{ secrets.GOOGLE_SERVICE_INFO_PLIST_BASE64 != '' }}
+        shell: bash
+        run: |
+          echo "${{ secrets.GOOGLE_SERVICE_INFO_PLIST_BASE64 }}" | base64 --decode > iosApp/GoogleService-Info.plist
+          test -s iosApp/GoogleService-Info.plist
+      - name: Build Compose framework
+        run: ./gradlew :composeApp:linkDebugFrameworkIosSimulatorArm64
+      - name: Build iOS Simulator app
+        run: |
+          xcodebuild \
+            -project iosApp/iosApp.xcodeproj \
+            -scheme iosApp \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO \
+            build
+      - name: Package app
+        run: |
+          mkdir -p artifacts
+          APP_PATH=$(find ~/Library/Developer/Xcode/DerivedData -path '*/Build/Products/Debug-iphonesimulator/iosApp.app' -print -quit)
+          test -n "$APP_PATH"
+          ditto "$APP_PATH" artifacts/iosApp.app
+      - name: Upload iOS app
+        uses: actions/upload-artifact@v4
+        with:
+          name: Wydatki-iOS-Simulator
+          path: artifacts/iosApp.app

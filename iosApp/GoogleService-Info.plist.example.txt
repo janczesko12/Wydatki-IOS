@@ -1,0 +1,2 @@
+Do not commit the real GoogleService-Info.plist to a public repository.
+For GitHub Actions, use the repository secret GOOGLE_SERVICE_INFO_PLIST_BASE64.
