@@ -9,12 +9,14 @@
 /* Begin PBXBuildFile section */
 		B23497842B104F5C00123456 /* iosApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23497832B104F5C00123456 /* iosApp.swift */; };
 		B23497862B104F5C00123456 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23497852B104F5C00123456 /* ContentView.swift */; };
+		B23497902B104F5C00123456 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B234978F2B104F5C00123456 /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		B23497802B104F5C00123456 /* iosApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iosApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B23497832B104F5C00123456 /* iosApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iosApp.swift; sourceTree = "<group>"; };
 		B23497852B104F5C00123456 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		B234978F2B104F5C00123456 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = GoogleService-Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -49,6 +51,7 @@
 			children = (
 				B23497832B104F5C00123456 /* iosApp.swift */,
 				B23497852B104F5C00123456 /* ContentView.swift */,
+				B234978F2B104F5C00123456 /* GoogleService-Info.plist */,
 			);
 			path = iosApp;
 			sourceTree = "<group>";
@@ -60,7 +63,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = B23497892B104F5C00123456 /* Build configuration list for PBXNativeTarget "iosApp" */;
 			buildPhases = (
-				B234978C2B104F5C00123456 /* Kotlin Multiplatform Framework */,
 				B234977C2B104F5C00123456 /* Sources */,
 				B234977D2B104F5C00123456 /* Frameworks */,
 				B234977E2B104F5C00123456 /* Resources */,
@@ -112,32 +114,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B23497902B104F5C00123456 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		B234978C2B104F5C00123456 /* Kotlin Multiplatform Framework */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Kotlin Multiplatform Framework";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "set -e\nif [ \"YES\" = \"$OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED\" ]; then\n  echo \"Skipping Kotlin framework build because OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED=YES\"\n  exit 0\nfi\ncd \"$SRCROOT/..\"\nchmod +x ./gradlew\n./gradlew :composeApp:embedAndSignAppleFrameworkForXcode";
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		B234977C2B104F5C00123456 /* Sources */ = {
@@ -205,10 +186,6 @@
 				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(SRCROOT)/../composeApp/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)",
-				);
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -216,11 +193,6 @@
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
-				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-framework",
-					"ComposeApp",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.example.wydatki.iosApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -237,20 +209,11 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(SRCROOT)/../composeApp/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)",
-				);
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
-				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-framework",
-					"ComposeApp",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.example.wydatki.iosApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
