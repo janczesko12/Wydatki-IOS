@@ -34,8 +34,37 @@ jobs:
             echo "Continuing without Firebase config."
           fi
 
-      - name: Build Compose framework
-        run: ./gradlew :composeApp:linkDebugFrameworkIosSimulatorArm64
+      - name: Prepare Xcode KMP integration
+        shell: bash
+        run: |
+          python3 <<'PY'
+          from pathlib import Path
+
+          path = Path("iosApp/iosApp.xcodeproj/project.pbxproj")
+          text = path.read_text()
+
+          old = '''\t\t\tbuildPhases = (\n\t\t\t\tB234977C2B104F5C00123456 /* Sources */,\n\t\t\t\tB234977D2B104F5C00123456 /* Frameworks */,\n\t\t\t\tB234977E2B104F5C00123456 /* Resources */,\n\t\t\t\tB234978C2B104F5C00123456 /* ShellScript */,\n\t\t\t);'''
+          new = '''\t\t\tbuildPhases = (\n\t\t\t\tB234978C2B104F5C00123456 /* ShellScript */,\n\t\t\t\tB234977C2B104F5C00123456 /* Sources */,\n\t\t\t\tB234977D2B104F5C00123456 /* Frameworks */,\n\t\t\t\tB234977E2B104F5C00123456 /* Resources */,\n\t\t\t);'''
+          if old not in text:
+              raise SystemExit("Could not find Xcode build phase order")
+          text = text.replace(old, new, 1)
+
+          old_script = '''\t\t\tshellScript = "cd \\\"$SRCROOT/..\\\"\\n./gradlew :composeApp:embedAndSignAppleFrameworkForXcode";'''
+          new_script = '''\t\t\tshellScript = "set -e\\nif [ \\\"YES\\\" = \\\"$OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED\\\" ]; then\\n  echo \\\"Skipping Kotlin framework build because OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED=YES\\\"\\n  exit 0\\nfi\\ncd \\\"$SRCROOT/..\\\"\\nchmod +x ./gradlew\\n./gradlew :composeApp:embedAndSignAppleFrameworkForXcode";'''
+          if old_script in text:
+              text = text.replace(old_script, new_script, 1)
+          else:
+              raise SystemExit("Could not find KMP Xcode run script")
+
+          # ComposeApp currently exposes iosSimulatorArm64, not x86_64.
+          # Keep the simulator build compatible with the available framework.
+          marker = '\t\t\t\tENABLE_PREVIEWS = YES;\n'
+          replacement = marker + '\t\t\t\tEXCLUDED_ARCHS[sdk=iphonesimulator*] = x86_64;\n'
+          text = text.replace(marker, replacement, 2)
+
+          path.write_text(text)
+          print("Xcode KMP integration prepared")
+          PY
 
       - name: Build iOS Simulator app
         run: |
@@ -47,6 +76,7 @@ jobs:
             -destination 'generic/platform=iOS Simulator' \
             CODE_SIGNING_ALLOWED=NO \
             BUNDLE_LOADER= \
+            EXCLUDED_ARCHS=x86_64 \
             build
 
       - name: Package app
