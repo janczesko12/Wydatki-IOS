@@ -25,6 +25,7 @@ kotlin {
     }
 
     cocoapods {
+        name = "ComposeApp"
         version = "1.0"
         summary = "Wydatki shared Kotlin Multiplatform module"
         homepage = "https://github.com/janczesko12/Wydatki-IOS"
