@@ -19,4 +19,3 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 rootProject.name = "Wydatki-iOS"
 include(":composeApp")
-include(":androidApp")
